@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Danfoss Time Reporting</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <h1>CREATE<br>ACCOUNT</h1>
+      <p>Register to access the Time Reporting System</p>
+    </div>
+  </div>
+  <div class="auth-right">
+    {% if logo_url %}
+    <img src="{{ logo_url }}" alt="Danfoss" class="danfoss-logo-img"/>
+    {% else %}
+    <div class="danfoss-logo-badge">Danfoss</div>
+    {% endif %}
+    <div class="auth-card">
+      <h2>REGISTER</h2>
+      <form method="POST" action="/register">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" required autocomplete="username"/>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" required autocomplete="new-password"/>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" name="confirm_password" required/>
+        </div>
+        <button type="submit" class="btn btn-red">REGISTER</button>
+      </form>
+      <a class="link-btn" href="/login">Already have an account? Login</a>
+    </div>
+    <footer>&copy; 2026 Danfoss Time Reporting System</footer>
+  </div>
+</div>
+<script src="/static/js/main.js"></script>
+</body>
+</html>

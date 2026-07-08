@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Danfoss Time Reporting</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="dashboard">
+
+  <!-- Header -->
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <div class="dash-title-group">
+        {% if logo_url %}
+        <img src="{{ logo_url }}" alt="Danfoss" class="dash-logo"/>
+        {% endif %}
+        <span class="dash-title">&#128203; PROJECT TIME REPORTING SYSTEM</span>
+      </div>
+      <span class="dash-date">&#128336; {{ current_month }} {{ current_year }}</span>
+    </div>
+  </header>
+  <div class="accent-line"></div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="filter-field">
+      <label>Consultant Name</label>
+      <input id="consultant" type="text" list="consultant-list"
+             value="{{ username if sso_signed_in else '' }}"
+             {% if sso_signed_in %}readonly{% endif %}
+             placeholder="Enter name..."/>
+      <datalist id="consultant-list">
+        {% for c in dummy_consultants %}
+          <option value="{{ c }}">
+        {% endfor %}
+      </datalist>
+    </div>
+    <div class="filter-sep"></div>
+
+    <div class="filter-field">
+      <label>Type</label>
+      <select id="proj-type">
+        <option value="Internal">Internal</option>
+        <option value="External">External</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <div class="filter-field">
+      <label>Month</label>
+      <select id="month-sel">
+        {% for m in months %}
+          <option value="{{ m }}" {% if m == current_month %}selected{% endif %}>{{ m }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <div class="filter-field">
+      <label>Year</label>
+      <select id="year-sel">
+        {% for y in years %}
+          <option value="{{ y }}" {% if y == current_year %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Main 3-column layout -->
+  <div class="dash-body">
+
+    <!-- LEFT PANEL -->
+    <aside class="left-panel">
+      <div class="panel-header red">PROJECT SETUP</div>
+      <div class="panel-section">
+        <label class="panel-label">Add Project</label>
+        <div class="autocomplete-wrap">
+          <input id="project-input" type="text" placeholder="Type to search..." autocomplete="off"/>
+          <ul id="ac-dropdown" class="ac-dropdown hidden"></ul>
+        </div>
+      </div>
+      <label class="panel-label" style="padding:0 14px;">Projects</label>
+      <ul id="project-list" class="project-list"></ul>
+      <div class="panel-actions">
+        <button class="btn btn-red btn-sm" onclick="addProject()">+ ADD PROJECT</button>
+        <button class="btn btn-blue btn-sm" onclick="removeProject()">- REMOVE SELECTED</button>
+      </div>
+    </aside>
+
+    <!-- CENTRE TABLE -->
+    <main class="table-wrap">
+      <div class="table-header blue">MONTHLY HOURS ENTRY</div>
+      <div id="month-subtitle" class="month-subtitle"></div>
+      <div class="table-scroll-container">
+        <div id="timesheet-table-container"></div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel">
+      <div class="panel-header blue">REPORT DETAILS</div>
+      <div class="panel-section">
+        <label class="panel-label">Project Owner</label>
+        <input id="owner" type="text" list="owner-list" placeholder="Owner name..."/>
+        <datalist id="owner-list">
+          {% for o in owner_suggestions %}
+            <option value="{{ o }}">
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="panel-divider"></div>
+      <div class="panel-section">
+        <label class="panel-label">Total Hours</label>
+        <input id="total-hours" type="text" readonly/>
+      </div>
+      <div class="panel-divider"></div>
+      <div class="panel-section">
+        <button class="btn btn-red btn-full" onclick="submitReport()">&#9654; SUBMIT REPORT</button>
+        <button class="btn btn-blue btn-full" onclick="window.location='/history'">&#128336; VIEW HISTORY</button>
+        <button class="btn btn-gray btn-full" onclick="clearForm()">&#10005; CLEAR</button>
+      </div>
+      <div id="submit-status" class="submit-status"></div>
+    </aside>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span>
+      Danfoss Time Reporting &nbsp;|&nbsp;
+      {% if sso_signed_in %}
+        &#128272; {{ username }} ({{ sso_email }})
+      {% else %}
+        &#128100; {{ username }}
+      {% endif %}
+      &nbsp;|&nbsp; Today: {{ today }}
+      &nbsp;|&nbsp; <span id="status-msg">Ready</span>
+    </span>
+    <a href="/logout" class="logout-link">Sign out</a>
+  </div>
+</div>
+
+<script>
+  const PROJECT_SUGGESTIONS  = {{ project_suggestions | tojson }};
+  const CONSULTANT_OWNER_MAP = {{ consultant_owner_map | tojson }};
+  const SSO_SIGNED_IN        = {{ 'true' if sso_signed_in else 'false' }};
+</script>
+<script src="/static/js/main.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
