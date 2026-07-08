@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — Danfoss Time Reporting</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <h1>TIME REPORTING<br>SYSTEM</h1>
+      <p>Employee Work Tracking</p>
+    </div>
+  </div>
+  <div class="auth-right">
+    {% if logo_url %}
+    <img src="{{ logo_url }}" alt="Danfoss" class="danfoss-logo-img"/>
+    {% else %}
+    <div class="danfoss-logo-badge">Danfoss</div>
+    {% endif %}
+
+    <!-- Microsoft SSO -->
+    <div class="auth-card sso-card">
+      <p class="sso-label">Sign in with your Danfoss account</p>
+      <a href="/auth/login" class="btn btn-blue sso-btn">🔐&nbsp; Sign in with Microsoft</a>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span class="divider-line"></span>
+      <span class="divider-text">or use local account</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Local login -->
+    <div class="auth-card">
+      <h2>LOCAL LOGIN</h2>
+      <form method="POST" action="/login">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" required autocomplete="username"/>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" required autocomplete="current-password"/>
+        </div>
+        <button type="submit" class="btn btn-red">LOGIN</button>
+      </form>
+      <a class="link-btn" href="/register">Don't have an account? Register</a>
+    </div>
+    <footer>&copy; 2026 Danfoss Time Reporting System</footer>
+  </div>
+</div>
+<script src="/static/js/main.js"></script>
+</body>
+</html>

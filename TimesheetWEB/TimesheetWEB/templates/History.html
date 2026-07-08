@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>History — Danfoss Time Reporting</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+<div class="dashboard">
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <span class="dash-title">🕐 TIMESHEET SUBMISSION HISTORY</span>
+      <a href="/dashboard" class="btn btn-blue btn-sm" style="margin-top:14px">← Back to Dashboard</a>
+    </div>
+  </header>
+  <div class="accent-line"></div>
+
+  <div class="history-wrap">
+    {% if records %}
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Consultant</th>
+          <th>Type</th>
+          <th>Month</th>
+          <th>Year</th>
+          <th>Owner</th>
+          <th>Total Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.date }}</td>
+          <td>{{ r.consultant }}</td>
+          <td>{{ r.type }}</td>
+          <td>{{ r.month }}</td>
+          <td>{{ r.year }}</td>
+          <td>{{ r.owner }}</td>
+          <td>{{ r.total_hours }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-history">No submission history yet for this session.</div>
+    {% endif %}
+  </div>
+</div>
+<script src="/static/js/main.js"></script>
+</body>
+</html>
